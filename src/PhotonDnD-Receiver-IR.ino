@@ -7,7 +7,7 @@
 
 #include <../lib/IRRemote/src/IRremote.h>
 
-/// Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
+// Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
 // This is a human-readable summary of (and not a substitute for) the license.
 // Disclaimer
 //
@@ -151,43 +151,21 @@ void setup()
 {
   // publish startup message with firmware version
   Particle.publish(APP_NAME, VERSION);
-  Particle.publish("Hi Steve", PRIVATE);
 
   Serial.begin(9600);
 //   Serial.println("Hi there!",PRIVATE);
 
   irrecv.enableIRIn(); // Start the receiver
+    Particle.subscribe("MasterPower", onMasterHandler, MY_DEVICES);
 
-  // send a samsung volume up/down code (good for testing your circuit)
-      Particle.subscribe("LedColor", onHandler, MY_DEVICES);
+    Particle.subscribe("LedColor", onHandler, MY_DEVICES);
 
-    // Particle.subscribe("LedOn", onHandler, MY_DEVICES);
-  //Particle.subscribe("LedOff", offHandler, ALL_DEVICES);
-      Particle.subscribe("MasterPower", onMasterHandler, MY_DEVICES);
 
-  Particle.function("sendgreen", sendLedGreen);
-      delay(500);
+    Particle.function("sendgreen", sendLedGreen);
 
-  Particle.function("sendred", sendLedRed);
-//   Particle.function("master", toggleOnOff);
+    Particle.function("sendred", sendLedRed);
 
 }
-
-
-
-
-   
-    // if(data == "on")
-    //     Particle.function("GreenLED", sendLedGreen);
-    //     Particle.publish("Green triggered", PRIVATE);
-        
-    // if(data == "off")
-    //     Particle.function("RedLED", sendLedRed);
-    //     Particle.publish("Red triggered", PRIVATE);
-
-
-
-
 
 /*******************************************************************************
 ********************************************************************************
@@ -245,17 +223,17 @@ void onHandler(String event, String data)
 
     if(data == "green") {
         Particle.publish("sending Green", PRIVATE);
-        irsend.sendRaw(SetGreenLED, 67, 38);
+        Particle.function("sendgreen", sendLedGreen);
     }
          
     if(data == "red") {
         Particle.publish("sending Red", PRIVATE);
-        irsend.sendRaw(SetRedLED, 67, 38);
+        Particle.function("sendgreen", sendLedRed);
     }
     
     if(data == "blue") {
         Particle.publish("sending Red", PRIVATE);
-        irsend.sendRaw(SetBlueLED, 67, 38);
+        Particle.function("sendgreen", sendLedBlue);
     }
  
 }  
@@ -307,8 +285,8 @@ int sendLedRed(String dummy)
 }
 
 /*******************************************************************************
- * Function Name  : sendLedRed
- * Description    : send a red pulse
+ * Function Name  : sendLedBlue
+ * Description    : send a blue pulse
  *******************************************************************************/
 int sendLedBlue(String dummy)
 {
@@ -319,7 +297,7 @@ int sendLedBlue(String dummy)
 
 /*******************************************************************************
  * Function Name  : toggleOnOff
- * Description    : send a red pulse
+ * Description    : send an on/of IR pulse
  *******************************************************************************/
 int toggleOnOff(String dummy)
 {
@@ -348,6 +326,8 @@ int sendSamsungVolumeDown(String dummy)
 void loop()
 {
   decodeIRcodes();
+    // delay(1);
+
 }
 
 /*******************************************************************************
