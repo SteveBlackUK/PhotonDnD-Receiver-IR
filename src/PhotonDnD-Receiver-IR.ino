@@ -219,21 +219,25 @@ unsigned int ToggleOnOff[67] = {8950,4400,600,500,600,500,600,550,550,550,600,50
 
 void onHandler(String event, String data)
 {
-    Particle.publish("in on handler", PRIVATE);
-
     if(data == "green") {
         Particle.publish("sending Green", PRIVATE);
-        Particle.function("sendgreen", sendLedGreen);
+        // Particle.function("sendgreen", sendLedGreen); // Not working for some reason...
+          irsend.sendRaw(SetGreenLED, 67, 38);
+
     }
          
     if(data == "red") {
         Particle.publish("sending Red", PRIVATE);
         Particle.function("sendgreen", sendLedRed);
+        irsend.sendRaw(SetRedLED, 67, 38);
+
     }
     
     if(data == "blue") {
         Particle.publish("sending Red", PRIVATE);
         Particle.function("sendgreen", sendLedBlue);
+        irsend.sendRaw(SetBlueLED, 67, 38);
+
     }
  
 }  
